@@ -1,29 +1,35 @@
 import fastifyEnv from '@fastify/env'
+import cors from '@fastify/cors'
 import Fastify from 'fastify'
 
 const fastify = Fastify({
     logger: true
 })
 
-// SCHEMA
+// SCHEMA ENV
 const schema = {
     type: 'object',
-    required: ['PORT'],
+    required: ['PORT', "MONGO_URI"],
     properties: {
         PORT: {
             type: "string",
             default: 3000
+        },
+        MONGO_URI : {
+            type: "string",
         }
     }
 }
+const corsOptions = {
+
+}
 
 const options = {
-    confKey: "config",
     dotenv: true,
     schema: schema,
     // data : data
 }
-
+fastify.register(cors, corsOptions)
 fastify.register(fastifyEnv, options).ready(
     (err) => {
         if (err) {
@@ -38,12 +44,12 @@ fastify.get('/', function (request, reply) {
     reply.send({ hello: 'world' })
 })
 
-console.log( fastify.config);
+console.log(fastify);
 
 
 const start = async () => {
     try {
-        fastify.listen({ port: 3000 })
+        fastify.listen({ port: process.env.PORT || 3000 })
         fastify.log.info(`Server is running `)
     } catch (err) {
         fastify.log.error(err)
