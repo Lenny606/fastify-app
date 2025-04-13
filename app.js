@@ -32,7 +32,6 @@ const options = {
 }
 fastify.register(sensible)
 fastify.register(cors, corsOptions)
-fastify.register(cors, corsOptions)
 fastify.register(fastifyEnv, options).ready(
     (err) => {
         if (err) {
