@@ -26,20 +26,15 @@ const corsOptions = {
 }
 
 const options = {
+    confKey: "config",
     dotenv: true,
     schema: schema,
     // data : data
 }
+
 fastify.register(sensible)
 fastify.register(cors, corsOptions)
-fastify.register(fastifyEnv, options).ready(
-    (err) => {
-        if (err) {
-            console.error('Error loading environment variables:', err)
-            process.exit(1)
-        }
-    }
-)
+fastify.register(fastifyEnv, options)
 
 // Declare a route
 fastify.get('/', function (request, reply) {
@@ -48,11 +43,11 @@ fastify.get('/', function (request, reply) {
 
 console.log(fastify);
 
-
 const start = async () => {
     try {
-        fastify.listen({ port: process.env.PORT || 3000 })
-        fastify.log.info(`Server is running `)
+        await fastify.ready() // Wait for all plugins to be loaded
+        await fastify.listen({ port: fastify.config.PORT || 3000 })
+        fastify.log.info(`Server is running on port ${fastify.config.PORT || 3000}`)
     } catch (err) {
         fastify.log.error(err)
         process.exit(1)
