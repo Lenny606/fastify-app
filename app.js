@@ -2,6 +2,7 @@ import fastifyEnv from '@fastify/env'
 import cors from '@fastify/cors'
 import sensible from '@fastify/sensible'
 import Fastify from 'fastify'
+import  fastifyPlugin from './db.js'
 
 const fastify = Fastify({
     logger: true
@@ -36,12 +37,12 @@ fastify.register(sensible)
 fastify.register(cors, corsOptions)
 fastify.register(fastifyEnv, options)
 
+fastify.register(fastifyPlugin)
+
 // Declare a route
 fastify.get('/', function (request, reply) {
     reply.send({ hello: 'world' })
 })
-
-console.log(fastify);
 
 const start = async () => {
     try {
