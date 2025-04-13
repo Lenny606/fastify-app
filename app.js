@@ -1,5 +1,6 @@
 import fastifyEnv from '@fastify/env'
 import cors from '@fastify/cors'
+import sensible from '@fastify/sensible'
 import Fastify from 'fastify'
 
 const fastify = Fastify({
@@ -29,6 +30,8 @@ const options = {
     schema: schema,
     // data : data
 }
+fastify.register(sensible)
+fastify.register(cors, corsOptions)
 fastify.register(cors, corsOptions)
 fastify.register(fastifyEnv, options).ready(
     (err) => {
